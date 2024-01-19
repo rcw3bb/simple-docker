@@ -11,6 +11,8 @@ import org.gradle.api.tasks.TaskAction
 import xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPluginExtension
 import xyz.ronella.gradle.plugin.simple.docker.DockerExecutor
 import xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPluginTestExtension
+import xyz.ronella.gradle.plugin.simple.docker.args.ArgumentManager
+import xyz.ronella.trivial.handy.CommandLocator
 import xyz.ronella.trivial.handy.OSType
 
 import java.nio.file.Files
@@ -25,6 +27,11 @@ import java.util.stream.Stream
  * @since 1.0.0
  */
 abstract class DockerTask extends DefaultTask {
+
+    protected Property<String> internalCommand
+    protected Property<String> internalManagement
+    protected ListProperty<String> internalArgs
+    protected ListProperty<String> internalZArgs
 
     /**
      * Force the execute the docker command inside a directory.
@@ -50,6 +57,9 @@ abstract class DockerTask extends DefaultTask {
     @Input @Optional
     abstract Property<String> getCommand()
 
+    @Input @Optional
+    abstract Property<String> getManagement()
+
     /**
      * The arguments for the docker command.
      */
@@ -66,6 +76,13 @@ abstract class DockerTask extends DefaultTask {
         EXTENSION = project.extensions.simple_docker
         forceDirectory.convention(true)
         directory.convention(project.rootProject.rootDir)
+
+        var objects = project.objects
+        internalCommand = objects.property(String)
+        internalManagement = objects.property(String)
+        internalArgs = objects.listProperty(String)
+        internalZArgs = objects.listProperty(String)
+
         initialization()
     }
 
@@ -113,9 +130,18 @@ abstract class DockerTask extends DefaultTask {
      */
     @Internal
     protected ListProperty<String> getAllArgs() {
-        def newArgs = args.get()
+
+        ArgumentManager.processArgs(this, internalArgs, EXTENSION)
+
+        def newArgs = []
+        newArgs.addAll(internalArgs.get())
+        newArgs.addAll(args.get())
+        newArgs.addAll(internalZArgs.get())
+        newArgs.addAll(zargs.get())
+
         def allTheArgs = project.getObjects().listProperty(String.class)
-        if ((command.getOrElse("").length()>0 || newArgs.size() > 0)) {
+
+        if (internalCommand.getOrElse("").length() > 0 || command.getOrElse("").length()>0 || newArgs.size() > 0) {
             allTheArgs.addAll(newArgs)
         }
         else {
@@ -125,54 +151,6 @@ abstract class DockerTask extends DefaultTask {
         return allTheArgs
     }
 
-    private String detectDockerExec() {
-        def osType = DockerExecutor.OS_TYPE
-        def dockerExec = DockerExecutor.EXECUTABLE
-        String cmd = null
-        switch (osType) {
-            case OSType.Windows:
-                cmd="where"
-                break
-            case OSType.Linux:
-                cmd="which"
-                break
-        }
-
-        if (cmd) {
-            def stdOutput = new ByteArrayOutputStream()
-            def errOutput = new ByteArrayOutputStream()
-
-            project.exec {
-                executable cmd
-                args dockerExec
-                standardOutput = stdOutput
-                errorOutput = errOutput
-                ignoreExitValue = true
-            }
-
-            def error = errOutput.toString()
-
-            if (error.size()>0) {
-                println("detectdockerExec Error: ${error}")
-            }
-
-            def knowndocker = stdOutput.toString().trim()
-
-            if (knowndocker.size()>0) {
-                switch (osType) {
-                    case OSType.Windows:
-                        String[] execs = knowndocker.split("\r\n");
-                        knowndocker = execs.first();
-                        break;
-                }
-
-                return knowndocker
-            }
-        }
-
-        return null
-    }
-
     /**
      * Build and instance of dockerExecutor.
      *
@@ -180,14 +158,12 @@ abstract class DockerTask extends DefaultTask {
      */
     @Internal
     DockerExecutor getExecutor() {
-        def knownDocker = detectDockerExec()
+        def knownDocker = CommandLocator.locateAsString(DockerExecutor.EXECUTABLE).orElse(null)
         def builder = DockerExecutor.getBuilder()
 
         builder.addKnownDockerExe(knownDocker)
-
-        if (command.isPresent()) {
-            builder.addArg(command.get())
-        }
+        builder.addManagementCommand(internalManagement.getOrElse(management.orNull))
+        builder.addCommand(internalCommand.getOrElse(command.orNull))
         builder.addArgs(allArgs.getOrElse([]))
         builder.addOpts(options.getOrElse([]))
         builder.addForceDirectory(forceDirectory.get())

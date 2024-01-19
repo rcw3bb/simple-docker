@@ -1,6 +1,8 @@
 package xyz.ronella.gradle.plugin.simple.docker;
 
+import xyz.ronella.trivial.decorator.StringBuilderAppender;
 import xyz.ronella.trivial.handy.OSType;
+import xyz.ronella.trivial.handy.impl.CommandArray;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -33,6 +36,10 @@ public class DockerExecutor {
      */
     public final static String EXECUTABLE = IExecutable.getInstance(OS_TYPE).getExecutable();
 
+    private final String mgmtCommand;
+
+    private final String command;
+
     private final List<String> args;
 
     private final List<String> opts;
@@ -44,6 +51,8 @@ public class DockerExecutor {
     private final Path directory;
 
     private DockerExecutor(final ExecutorBuilder builder) {
+        this.command = builder.command;
+        this.mgmtCommand = builder.mgmtCommand;
         this.args = builder.args;
         this.opts = builder.opts;
         this.knownExecutable = builder.knownExecutable;
@@ -275,21 +284,25 @@ public class DockerExecutor {
      * @return An array of executable args.
      */
     public List<String> getExecArgs() {
-        List<String> execArgs = new ArrayList<>();
-        if (forceDirectory && null!=directory && null!=getScript()) {
-            execArgs.add(quoteString(directory.toString(), OS_TYPE));
-            execArgs.add(getDockerExe());
-        }
+        final var cmdArray = CommandArray.getBuilder()
+                //When script wrapper is being used.
+                .addArgs(()-> forceDirectory && null!=directory && null!=getScript(),
+                        List.of(quoteString(directory.toString(), OS_TYPE), getDockerExe()))
 
-        if (null!=opts && !opts.isEmpty()) {
-            execArgs.addAll(opts);
-        }
+                //Docker options
+                .addArgs(()-> !opts.isEmpty(), opts)
 
-        if (null!=args && !args.isEmpty()) {
-            execArgs.addAll(args);
-        }
+                //Docker management command
+                .addArg(()-> Optional.ofNullable(mgmtCommand).isPresent(), mgmtCommand)
 
-        return execArgs;
+                //Docker command
+                .addArg(()-> Optional.ofNullable(command).isPresent(), command)
+
+                //Docker command args.
+                .addArgs(()-> !args.isEmpty(), args)
+                .build();
+
+        return Arrays.asList(cmdArray.getCommand());
     }
 
     /**
@@ -305,16 +318,20 @@ public class DockerExecutor {
             return null;
         }
 
-        StringBuilder command = new StringBuilder(executable);
-        getExecArgs().forEach(___arg -> command.append(DELIM).append(String.join(DELIM, ___arg)));
+        final Consumer<StringBuilder> beforeAppendLogic = ___builder -> ___builder.append(!___builder.isEmpty() ? DELIM : "");
+        final var cmd = new StringBuilderAppender(beforeAppendLogic);
+        cmd.append(executable);
+        getExecArgs().forEach(cmd::append);
 
-        return command.toString();
+        return cmd.toString();
     }
 
     private static class ExecutorBuilder {
 
         private final List<String> args = new ArrayList<>();
         private final List<String> opts = new ArrayList<>();
+        public String command;
+        public String mgmtCommand;
         private String knownExecutable;
         private boolean forceDirectory;
         private Path directory;
@@ -328,6 +345,16 @@ public class DockerExecutor {
             if (null!=arg) {
                 args.add(arg);
             }
+            return this;
+        }
+
+        public ExecutorBuilder addCommand(final String command) {
+            this.command = command;
+            return this;
+        }
+
+        public ExecutorBuilder addManagementCommand(final String command) {
+            this.mgmtCommand = command;
             return this;
         }
 
