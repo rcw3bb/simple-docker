@@ -16,6 +16,11 @@ abstract class SimpleDockerPluginExtension {
     abstract Property<Boolean> getVerbose()
 
     /**
+     * The build tag for the Dockerfile to use
+     */
+    abstract Property<String> getDockerFileBuildTag()
+
+    /**
      * The default directory to use if the directory was not specified.
      */
     abstract Property<File> getDirectory()
@@ -28,6 +33,7 @@ abstract class SimpleDockerPluginExtension {
     SimpleDockerPluginExtension() {
         noop.convention(false)
         verbose.convention(false)
+        dockerFileBuildTag.convention('')
     }
 
     def writeln(String text) {

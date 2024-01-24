@@ -10,7 +10,7 @@ abstract class DockerVersion extends DockerTask {
     DockerVersion() {
         super()
         description = 'A convenience docker --version command.'
-        args.add('--version')
+        internalArgs.add('--version')
         forceDirectory.convention(false)
     }
 }
