@@ -82,45 +82,6 @@ abstract class DockerTask extends DefaultTask {
         internalManagement = objects.property(String)
         internalArgs = objects.listProperty(String)
         internalZArgs = objects.listProperty(String)
-
-        initialization()
-    }
-
-    /**
-     * Initialized fields based on command line parameters.
-     */
-    def initialization() {
-
-        if (project.hasProperty('sd_directory')) {
-            directory.convention(new File((project.sd_directory as String)))
-            EXTENSION.writeln("Found sd_directory: ${directory}")
-        }
-
-        if (project.hasProperty('sd_command')) {
-            command.convention(new File((project.sd_command as String).trim()).absolutePath)
-            EXTENSION.writeln("Found sd_command: ${command}")
-        }
-
-        if (project.hasProperty('sd_options')) {
-            options.convention((project.sd_options as String).split(",").toList().stream()
-                    .map( {___arg -> ___arg.trim()})
-                    .collect(Collectors.toList()))
-            EXTENSION.writeln("Found sd_options: ${options}")
-        }
-
-        if (project.hasProperty('sd_args')) {
-            args.convention((project.sd_args as String).split(",").toList().stream()
-                    .map( { ___arg -> ___arg.trim()})
-                    .collect(Collectors.toList()))
-            EXTENSION.writeln("Found sd_args: ${args}")
-        }
-
-        if (project.hasProperty('sd_zargs')) {
-            zargs.convention((project.sd_zargs as String).split(",").toList().stream()
-                    .map( { ___arg -> ___arg.trim()})
-                    .collect(Collectors.toList()))
-            EXTENSION.writeln("Found sd_zargs: ${zargs}")
-        }
     }
 
     /**
