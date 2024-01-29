@@ -5,7 +5,7 @@ abstract class DockerListImages extends DockerImage {
     DockerListImages() {
         super()
         description = 'A convenience task for listing the images'
-        internalArgs.convention(List.of('ls'))
+        internalArgs.convention(List.of('ls', '--all'))
     }
 
 }

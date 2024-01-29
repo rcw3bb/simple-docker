@@ -27,6 +27,7 @@ class SimpleDockerPlugin implements Plugin<Project> {
         project.extensions.create('simple_docker', SimpleDockerPluginExtension)
         project.extensions.create('simple_docker_test', SimpleDockerPluginTestExtension)
 
+        project.task('dockerListContainers', type: DockerListContainers)
         project.task('dockerListImages', type: DockerListImages)
         project.task('dockerVersion', type: DockerVersion)
         project.task('dockerPrune', type: DockerPrune)
