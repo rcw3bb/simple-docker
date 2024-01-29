@@ -14,12 +14,15 @@ import java.nio.file.Paths
  */
 class SimpleDockerPlugin implements Plugin<Project> {
 
-    private static final String DOCKER_FILE = "Dockerfile"
+    private static final String DOCKER_FILE = 'Dockerfile'
+    private static final String DOCKER_COMPOSE_FILE = 'docker-compose.yml'
 
     @Override
     void apply(Project project) {
 
-        final def dockerFile = Paths.get(project.rootProject.rootDir.absolutePath, DOCKER_FILE).toFile()
+        final def rootDir = project.rootProject.rootDir.absolutePath
+        final def dockerFile = Paths.get(rootDir, DOCKER_FILE).toFile()
+        final def dockerComposeFile= Paths.get(rootDir, DOCKER_COMPOSE_FILE).toFile()
 
         project.extensions.create('simple_docker', SimpleDockerPluginExtension)
         project.extensions.create('simple_docker_test', SimpleDockerPluginTestExtension)
@@ -27,6 +30,16 @@ class SimpleDockerPlugin implements Plugin<Project> {
         project.task('dockerListImages', type: DockerListImages)
         project.task('dockerVersion', type: DockerVersion)
         project.task('dockerPrune', type: DockerPrune)
+
+        if (dockerComposeFile.exists()) {
+            project.tasks.register('dockerComposeDown', DockerComposeDown.class)
+            project.tasks.register('dockerComposePause', DockerComposePause.class)
+            project.tasks.register('dockerComposeRestart', DockerComposeRestart.class)
+            project.tasks.register('dockerComposeStart', DockerComposeStart.class)
+            project.tasks.register('dockerComposeStop', DockerComposeStop.class)
+            project.tasks.register('dockerComposeUnpause', DockerComposeUnpause.class)
+            project.tasks.register('dockerComposeUp', DockerComposeUp.class)
+        }
 
         if (dockerFile.exists()) {
             project.tasks.register('dockerFileBuild', DockerFileBuild.class)
