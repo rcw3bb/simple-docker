@@ -1,4 +1,4 @@
-package xyz.ronella.gradle.plugin.simple.docker
+package xyz.ronella.gradle.plugin.simple.docker.ext
 
 /**
  * The extension for customized the behaviour of the plugin for testing.

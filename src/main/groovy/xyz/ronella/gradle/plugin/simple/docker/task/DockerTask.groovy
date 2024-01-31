@@ -8,16 +8,15 @@ import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 
-import xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPluginExtension
+import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginExtension
 import xyz.ronella.gradle.plugin.simple.docker.DockerExecutor
-import xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPluginTestExtension
+import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginTestExtension
 import xyz.ronella.gradle.plugin.simple.docker.args.ArgumentManager
 import xyz.ronella.trivial.handy.CommandLocator
 import xyz.ronella.trivial.handy.OSType
 
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.stream.Collectors
 import java.util.stream.Stream
 
 /**

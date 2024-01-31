@@ -6,13 +6,13 @@ abstract class DockerFileBuild extends DockerBuildX {
         group = 'Simple docker - Dockerfile'
         description = 'A task for building the image based on Dockerfile.'
         internalCommand.convention('build')
-        internalArgs.addAll('--tag', EXTENSION.dockerFileBuildTag.get())
+        internalArgs.addAll('--tag', EXTENSION.dockerFile.tag.get())
         internalZArgs.add('.')
     }
 
     def executeCommand() {
-        if (EXTENSION.dockerFileBuildTag.get().empty) {
-            System.err.println("Please set the simple_docker.dockerFileBuildTag property.")
+        if (EXTENSION.dockerFile.tag.get().empty) {
+            System.err.println("Please set the simple_docker.dockerFile.tag property.")
             return
         }
         super.executeCommand()

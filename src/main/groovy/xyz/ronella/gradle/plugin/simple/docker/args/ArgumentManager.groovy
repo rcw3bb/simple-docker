@@ -1,7 +1,7 @@
 package xyz.ronella.gradle.plugin.simple.docker.args
 
 import org.gradle.api.provider.ListProperty
-import xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPluginExtension
+import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginExtension
 import xyz.ronella.gradle.plugin.simple.docker.task.DockerTask
 
 final class ArgumentManager {

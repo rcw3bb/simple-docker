@@ -2,6 +2,9 @@ package xyz.ronella.gradle.plugin.simple.docker
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import xyz.ronella.gradle.plugin.simple.docker.ext.DockerfileExtension
+import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginExtension
+import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginTestExtension
 import xyz.ronella.gradle.plugin.simple.docker.task.*
 
 import java.nio.file.Paths
@@ -25,6 +28,7 @@ class SimpleDockerPlugin implements Plugin<Project> {
         final def dockerComposeFile= Paths.get(rootDir, DOCKER_COMPOSE_FILE).toFile()
 
         project.extensions.create('simple_docker', SimpleDockerPluginExtension)
+        project.simple_docker.extensions.create('dockerFile', DockerfileExtension)
         project.extensions.create('simple_docker_test', SimpleDockerPluginTestExtension)
 
         project.task('dockerListContainers', type: DockerListContainers)
