@@ -11,7 +11,6 @@ import org.gradle.api.tasks.TaskAction
 import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginExtension
 import xyz.ronella.gradle.plugin.simple.docker.DockerExecutor
 import xyz.ronella.gradle.plugin.simple.docker.ext.SimpleDockerPluginTestExtension
-import xyz.ronella.gradle.plugin.simple.docker.args.ArgumentManager
 import xyz.ronella.trivial.handy.CommandLocator
 import xyz.ronella.trivial.handy.OSType
 
@@ -90,8 +89,6 @@ abstract class DockerTask extends DefaultTask {
      */
     @Internal
     protected ListProperty<String> getAllArgs() {
-
-        ArgumentManager.processArgs(this, internalArgs, EXTENSION)
 
         def newArgs = []
         newArgs.addAll(internalArgs.get())
