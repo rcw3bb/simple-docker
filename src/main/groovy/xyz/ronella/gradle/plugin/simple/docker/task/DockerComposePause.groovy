@@ -1,6 +1,6 @@
 package xyz.ronella.gradle.plugin.simple.docker.task
 
-abstract class DockerComposePause extends DockerCompose {
+abstract class DockerComposePause extends DockerComposeGroup {
 
     DockerComposePause() {
         super()

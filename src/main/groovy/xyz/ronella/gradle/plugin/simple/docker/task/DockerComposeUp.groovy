@@ -1,6 +1,6 @@
 package xyz.ronella.gradle.plugin.simple.docker.task
 
-abstract class DockerComposeUp extends DockerCompose {
+abstract class DockerComposeUp extends DockerComposeGroup {
 
     DockerComposeUp() {
         super()
