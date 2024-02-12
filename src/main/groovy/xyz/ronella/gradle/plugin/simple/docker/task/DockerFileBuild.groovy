@@ -4,7 +4,7 @@ abstract class DockerFileBuild extends DockerBuildX {
     DockerFileBuild() {
         super()
         group = 'Simple docker - Dockerfile'
-        description = 'A task for building the image based on Dockerfile.'
+        description = 'A task for building the image based on Dockerfile'
         internalCommand.convention('build')
         internalArgs.addAll('--tag', EXTENSION.dockerFile.tag.get())
         internalZArgs.add('.')
