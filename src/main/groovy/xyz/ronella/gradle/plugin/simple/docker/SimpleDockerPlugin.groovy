@@ -18,14 +18,18 @@ import java.nio.file.Paths
 class SimpleDockerPlugin implements Plugin<Project> {
 
     private static final String DOCKER_FILE = 'Dockerfile'
-    private static final String DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+    private static final List<String> DOCKER_COMPOSE_FILENAMES = List.of('docker-compose.yml'
+            ,'docker-compose.yaml'
+            ,'compose.yaml');
 
     @Override
     void apply(Project project) {
 
         final def rootDir = project.rootProject.rootDir.absolutePath
         final def dockerFile = Paths.get(rootDir, DOCKER_FILE).toFile()
-        final def dockerComposeFile= Paths.get(rootDir, DOCKER_COMPOSE_FILE).toFile()
+
+        final def dockerComposeFileExists = !DOCKER_COMPOSE_FILENAMES.stream()
+                .filter(___filename -> Paths.get(rootDir, ___filename).toFile().exists()).toList().empty
 
         project.extensions.create('simple_docker', SimpleDockerPluginExtension)
         project.simple_docker.extensions.create('dockerFile', DockerfileExtension)
@@ -36,7 +40,7 @@ class SimpleDockerPlugin implements Plugin<Project> {
         project.task('dockerVersion', type: DockerVersion)
         project.task('dockerPrune', type: DockerPrune)
 
-        if (dockerComposeFile.exists()) {
+        if (dockerComposeFileExists) {
             project.tasks.register('dockerComposeDown', DockerComposeDown.class)
             project.tasks.register('dockerComposePause', DockerComposePause.class)
             project.tasks.register('dockerComposeRestart', DockerComposeRestart.class)
