@@ -174,6 +174,12 @@ dockerComposeUp - A task for initializing and starting docker composed services
 ### build.gradle file
 
 ```groovy
+import xyz.ronella.gradle.plugin.simple.docker.task.*
+
+plugins {
+    id "xyz.ronella.simple-docker" version "1.0.0"
+}
+
 task startNginx(type: DockerContainer) {
     command = 'run'
     args = ['-d', '-p', '8080:80', '--rm', '--name=test-nginx']
@@ -186,7 +192,7 @@ task stopNginx(type: DockerContainer) {
 }
 ```
 
-### Start nginx
+### Starting nginx
 
 ```
 gradlew startNginx
@@ -196,7 +202,7 @@ Nginx will start and the host port is 8080. Thus, you can access it using the fo
 
 http://localhost:8080/
 
-### Stop nginx
+### Stopping nginx
 
 ```
 gradlew stopNginx
