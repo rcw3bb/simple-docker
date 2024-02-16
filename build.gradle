@@ -3,15 +3,15 @@ plugins {
     id 'groovy'
     id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '1.2.1'
-    id 'maven-publish'
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-pluginBundle {
-    website = 'https://github.com/rcw3bb/simple-docker'
-    vcsUrl = 'https://github.com/rcw3bb/simple-docker'
-    tags = ['docker', 'simple-docker', 'ronella']
+ext {
+    pluginDescription = 'The plugin that allows you access to docker commands inside gradle as task'
 }
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 configurations {
     plugin
@@ -24,17 +24,6 @@ configurations {
 
 }
 
-gradlePlugin {
-    plugins {
-        simpleDocker {
-            id = 'xyz.ronella.simple-docker'
-            displayName = 'Simple Docker Plugin'
-            description = 'The plugin that allows you access to docker commands inside gradle as task'
-            implementationClass = 'xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPlugin'
-        }
-    }
-}
-
 shadowJar {
     configurations = [project.configurations.plugin]
     archiveClassifier.set("")
@@ -42,57 +31,23 @@ shadowJar {
     minimize()
 }
 
-ext {
-    publishingPath = version.toString().contains("SNAPSHOT") ? 'snapshots' : 'internal'
+pluginBundle {
+    website = 'https://github.com/rcw3bb/simple-docker'
+    vcsUrl = 'https://github.com/rcw3bb/simple-docker'
+    description = pluginDescription
+    tags = ['docker', 'simple-docker', 'ronella']
 }
 
-publishing {
-    publications {
-
-        pluginMaven(MavenPublication) {
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-
-            pom {
-                name = 'Simple Docker Plugin'
-                description = 'The plugin that allows you access to docker commands inside gradle as task'
-                url = 'https://github.com/rcw3bb/simple-docker'
-                licenses {
-                    license {
-                        name = 'MIT License'
-                        url = 'https://github.com/rcw3bb/simple-docker/blob/master/LICENSE.md'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'ron'
-                        name = 'Ronaldo Webb'
-                        email = 'ron@ronella.xyz'
-                    }
-                }
-                scm {
-                    url = 'https://github.com/rcw3bb/simple-docker'
-                }
-            }
-
-            artifacts {
-                groupId 'xyz.ronella.gradle.plugin'
-                artifactId project.name
-                version version
-                artifact "./build/libs/${project.name}-${version}.jar"
-            }
+gradlePlugin {
+    plugins {
+        simpleDockerPlugin {
+            id = 'xyz.ronella.simple-docker'
+            displayName = 'Simple Docker Plugin'
+            description = pluginDescription
+            implementationClass = 'xyz.ronella.gradle.plugin.simple.docker.SimpleDockerPlugin'
         }
     }
 }
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
