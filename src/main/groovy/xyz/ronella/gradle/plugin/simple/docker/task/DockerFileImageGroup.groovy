@@ -3,6 +3,12 @@ package xyz.ronella.gradle.plugin.simple.docker.task
 import xyz.ronella.gradle.plugin.simple.docker.util.IDockerFileExecute
 import xyz.ronella.gradle.plugin.simple.docker.util.impl.DefaultDockerFileExecute
 
+/**
+ * The base class for all the auto docker file tasks.
+ *
+ * @author Ron Webb
+ * @since 1.0.0
+ */
 abstract class DockerFileImageGroup extends DockerImage {
     DockerFileImageGroup() {
         super()

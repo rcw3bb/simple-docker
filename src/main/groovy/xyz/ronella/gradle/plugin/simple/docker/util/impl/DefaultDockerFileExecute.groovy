@@ -5,6 +5,12 @@ import xyz.ronella.gradle.plugin.simple.docker.task.DockerBuildX
 import xyz.ronella.gradle.plugin.simple.docker.task.DockerImage
 import xyz.ronella.gradle.plugin.simple.docker.util.IDockerFileExecute
 
+/**
+ * An implementation of IDockerFileExecute.
+ *
+ * @author Ron Webb
+ * @since 1.0.0
+ */
 class DefaultDockerFileExecute implements IDockerFileExecute {
     final SimpleDockerPluginExtension ext
 

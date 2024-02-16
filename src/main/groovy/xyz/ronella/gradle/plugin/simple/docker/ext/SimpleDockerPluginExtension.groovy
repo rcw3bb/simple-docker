@@ -3,7 +3,7 @@ package xyz.ronella.gradle.plugin.simple.docker.ext
 import org.gradle.api.provider.Property
 
 /**
- * The extension for customized the behaviour of the plugin.
+ * The extension to customize the behaviour of the plugin.
  *
  * @author Ron Webb
  * @since 1.0.0

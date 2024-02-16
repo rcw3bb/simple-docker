@@ -1,5 +1,11 @@
 package xyz.ronella.gradle.plugin.simple.docker.task
 
+/**
+ * The docker auto task for the Dockerfile delete command.
+ *
+ * @author Ron Webb
+ * @since 1.0.0
+ */
 abstract class DockerFileDelete extends DockerFileImageGroup {
 
     DockerFileDelete() {
