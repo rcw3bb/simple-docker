@@ -7,7 +7,7 @@ import xyz.ronella.gradle.plugin.simple.docker.impl.MacOS;
 import xyz.ronella.trivial.handy.OSType;
 
 /**
- * The template of identifying the actual docker executable.
+ * The template of identifying the actual docker executable or script.
  *
  * @author Ron Webb
  * @since 1.0.0
@@ -20,6 +20,8 @@ public interface IExecutable {
      * @return The docker executable.
      */
     String getExecutable();
+
+    String getScript();
 
     /**
      * The factory of creating a valid IExecutable implementation.

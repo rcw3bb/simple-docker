@@ -181,7 +181,7 @@ public class DockerExecutor {
      * @return The path of the script.
      */
     public Path getScript() {
-        return getScriptPath(IScript.getInstance(OS_TYPE).getScript());
+        return getScriptPath(IExecutable.getInstance(OS_TYPE).getScript());
     }
 
     /**

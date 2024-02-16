@@ -1,7 +1,6 @@
 package xyz.ronella.gradle.plugin.simple.docker.impl;
 
 import xyz.ronella.gradle.plugin.simple.docker.IExecutable;
-import xyz.ronella.gradle.plugin.simple.docker.IScript;
 
 /**
  * An implementation specific to Linux.
@@ -9,7 +8,7 @@ import xyz.ronella.gradle.plugin.simple.docker.IScript;
  * @author Ron Webb
  * @since 1.0.0
  */
-public class LinuxOS implements IExecutable, IScript {
+public class LinuxOS implements IExecutable {
     @Override
     public String getExecutable() {
         return "docker";
