@@ -14,7 +14,7 @@ In your **build.gradle** file add the following plugin:
 
 ```groovy
 plugins {
-    id "xyz.ronella.simple-Docker" version "1.0.0"
+    id "xyz.ronella.simple-docker" version "1.0.0"
 }
 ```
 
