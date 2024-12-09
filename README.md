@@ -14,7 +14,7 @@ In your **build.gradle** file add the following plugin:
 
 ```groovy
 plugins {
-    id "xyz.ronella.simple-docker" version "1.0.0"
+    id "xyz.ronella.simple-docker" version "1.0.1"
 }
 ```
 
@@ -177,7 +177,7 @@ dockerComposeUp - A task for initializing and starting docker composed services
 import xyz.ronella.gradle.plugin.simple.docker.task.*
 
 plugins {
-    id "xyz.ronella.simple-docker" version "1.0.0"
+    id "xyz.ronella.simple-docker" version "1.0.1"
 }
 
 task startNginx(type: DockerContainer) {
